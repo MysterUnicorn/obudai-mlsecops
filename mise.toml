@@ -1,0 +1,15 @@
+[tools]
+python = "3.13.3"
+uv = "0.9.4"
+
+[env]
+_.python.venv = { path = ".venv", create = true } 
+
+
+[tasks."install"]
+description = "Install dependencies"
+run = "uv pip install -r requirements.txt"
+
+[tasks."format:python"]
+description = "Format Python code"
+run = "uv run python -m autopep8 --in-place --aggressive --recursive ."
