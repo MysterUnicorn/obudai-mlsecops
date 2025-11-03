@@ -3,3 +3,6 @@ TODO.md
 .dev-venv
 .prod-venv
 __pycache__/
+mlartifacts
+mlruns
+artifacts

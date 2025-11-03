@@ -30,10 +30,10 @@ def trained_model(wine_data):
 
 def test_train_returns_valid_metrics(trained_model):
     model, metrics = trained_model
-    assert "in_sample_error" in metrics
-    assert "out_of_sample_error" in metrics
-    assert 0 <= metrics["in_sample_error"] <= 1
-    assert 0 <= metrics["out_of_sample_error"] <= 1
+    assert "in_sample_score" in metrics
+    assert "out_of_sample_score" in metrics
+    assert 0 <= metrics["in_sample_score"] <= 1
+    assert 0 <= metrics["out_of_sample_score"] <= 1
 
 
 def test_model_save_load_consistency(trained_model, wine_data):
@@ -100,9 +100,9 @@ def test_predict_matches_train_f1_scores(wine_data):
     f1_test = f1_score(y_test, y_pred_test, pos_label=1)
 
     # Compare with the F1 scores returned by train()
-    assert np.isclose(f1_train, metrics["in_sample_error"], atol=1e-6), (
-        f"Train F1 mismatch: {f1_train} vs {metrics['in_sample_error']}"
+    assert np.isclose(f1_train, metrics["in_sample_score"], atol=1e-6), (
+        f"Train F1 mismatch: {f1_train} vs {metrics['in_sample_score']}"
     )
-    assert np.isclose(f1_test, metrics["out_of_sample_error"], atol=1e-6), (
-        f"Test F1 mismatch: {f1_test} vs {metrics['out_of_sample_error']}"
+    assert np.isclose(f1_test, metrics["out_of_sample_score"], atol=1e-6), (
+        f"Test F1 mismatch: {f1_test} vs {metrics['out_of_sample_score']}"
     )

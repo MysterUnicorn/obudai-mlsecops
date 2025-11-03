@@ -7,10 +7,8 @@ from flask import Flask
 from flask_restx import Api, Resource, fields
 from werkzeug.datastructures import FileStorage
 
-import ml_model
-
-model = ml_model.MLModel()
-model.load_model()
+import ml_model_mlflow
+model = ml_model_mlflow.MLModelWithMLFlow()
 
 app = Flask(__name__)
 api = Api(
@@ -81,9 +79,7 @@ class Train(Resource):
         pandas_data = pd.read_csv(StringIO(data), sep=delimiter)
         print(pandas_data.head())
 
-        train_results = model.train(pandas_data)
-
-        model.save_model()
+        train_results = model.train_and_save(pandas_data)
 
         return {
             'message': 'Model trained successfully',

@@ -15,11 +15,15 @@ from imblearn.over_sampling import RandomOverSampler
 from imblearn.under_sampling import TomekLinks
 
 
+
 class MLModel:
-    def __init__(self, random_seed=42):
+    def __init__(self, 
+                 random_seed=42):
         self.model = None
         self.scorer = make_scorer(f1_score, pos_label=1)
         self.random_seed = random_seed
+
+
 
     def load_model(self, model_path="./artifacts/model.pkl"):
         """
@@ -91,6 +95,6 @@ class MLModel:
         self.model = model
 
         return {
-            "in_sample_error": self.scorer(model, X_train, y_train),
-            "out_of_sample_error": self.scorer(model, X_test, y_test)
+            "in_sample_score": self.scorer(model, X_train, y_train),
+            "out_of_sample_score": self.scorer(model, X_test, y_test)
         }

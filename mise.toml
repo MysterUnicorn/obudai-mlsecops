@@ -19,7 +19,12 @@ run = "uv run python -m autopep8 --in-place --aggressive --recursive ."
 [tasks."run:dev"]
 description = "Run the application in development mode"
 depends = ["install"]
-run = "uv run gunicorn -w 4 -b 0.0.0.0:8000 app:app"
+run = "mise run:mlflow & uv run gunicorn -w 1 -b 0.0.0.0:8000 app:app"
+
+[tasks."run:mlflow"]
+description = "Run mlflow tracking server on localhost:8080"
+depends = ["install"]
+run = "mlflow server --host 127.0.0.1 --port 8080"
 
 [tasks."test"]
 description = "Run all available test"
