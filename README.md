@@ -1,8 +1,8 @@
-## Change Note
-In the current incrment, you can run the application with mlflow. 
-Whenever you train the app, a model artifact is saved to mlflow.
-TODO By default the latest staging app loads upon app init.
-TODO You can load specific revisions of the model by an endpoint.
+# Wine Quality Prediction API
+
+Simple API to perform predict wine quality based on chemical parameters.
+The API also provides an interface to retrain it.
+The models are managed by mlflow.
 
 ## The build tool
 We use [mise-en-place](https://mise.jdx.dev/). 

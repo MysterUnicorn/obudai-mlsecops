@@ -18,9 +18,11 @@ api = Api(
     description='A simple API for predicting wine quality'
 )
 
-namespace = api.namespace('wine', description='Wine quality operations')
+model_namespace = api.namespace('model', description='Model training and prediction')
+metadata_namespace = api.namespace("metadata", description="Metadata about the api")
 
-api.add_namespace(namespace)
+api.add_namespace(model_namespace)
+api.add_namespace(metadata_namespace)
 
 prediction_model = api.model('Prediction', {
     'fixed acidity': fields.Float(required=True, description='Fixed Acidity'),
@@ -52,7 +54,7 @@ file_upload.add_argument(
 )
 
 
-@namespace.route('/predict')
+@model_namespace.route('/predict')
 class Predict(Resource):
     @api.expect(prediction_model)
     def post(self):
@@ -64,7 +66,7 @@ class Predict(Resource):
         }
 
 
-@namespace.route('/train')
+@model_namespace.route('/train')
 class Train(Resource):
     @api.expect(file_upload)
     def post(self):
@@ -86,6 +88,10 @@ class Train(Resource):
             **train_results
         }
 
+@metadata_namespace.route("model_name")
+class ModelName(Resource):
+    def get(self):
+        return model.get_model_name()
 
 if __name__ == '__main__':
     app.run(debug=True)

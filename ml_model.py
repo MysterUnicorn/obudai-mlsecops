@@ -18,8 +18,9 @@ from imblearn.under_sampling import TomekLinks
 
 class MLModel:
     def __init__(self, 
-                 random_seed=42):
-        self.model = None
+                 random_seed=42,
+                 model=None):
+        self.model = model
         self.scorer = make_scorer(f1_score, pos_label=1)
         self.random_seed = random_seed
 
