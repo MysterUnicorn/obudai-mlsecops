@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import datetime
 
-import ml_model
+import ml_model as ml_model
 
 
 class MLModelWithMLFlow():

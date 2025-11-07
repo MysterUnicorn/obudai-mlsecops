@@ -7,7 +7,7 @@ from flask import Flask
 from flask_restx import Api, Resource, fields
 from werkzeug.datastructures import FileStorage
 
-import ml_model_mlflow
+import ml_model_mlflow as ml_model_mlflow
 model = ml_model_mlflow.MLModelWithMLFlow()
 
 app = Flask(__name__)

@@ -4,7 +4,7 @@ uv = "0.9.4"
 
 [env]
 _.python.venv = { path = ".venv", create = true } 
-PYTHONPATH="{{config_root}}"
+PYTHONPATH="{{config_root}}/src"
 
 
 [tasks."install"]
@@ -30,3 +30,7 @@ run = "mlflow server --host 127.0.0.1 --port 8080"
 description = "Run all available test"
 depends = ["install"]
 run = "uv run pytest"
+
+[tasks."docker-build"]
+description = "Builds dockerfile"
+run = "docker build --build-arg PY_VERSION={{ tool('python') }} ."
