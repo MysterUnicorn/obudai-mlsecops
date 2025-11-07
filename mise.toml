@@ -19,6 +19,7 @@ run = "uv run python -m autopep8 --in-place --aggressive --recursive ."
 [tasks."run:dev"]
 description = "Run the application in development mode"
 depends = ["install"]
+env.MLFLOW_TRACKING_URI = "http://localhost:8000"
 run = "mise run:mlflow & uv run gunicorn -w 1 -b 0.0.0.0:8000 app:app"
 
 [tasks."run:mlflow"]
@@ -31,6 +32,24 @@ description = "Run all available test"
 depends = ["install"]
 run = "uv run pytest"
 
-[tasks."docker-build"]
-description = "Builds dockerfile"
-run = "docker build --build-arg PY_VERSION={{ tool('python') }} ."
+[tasks."docker:build"]
+description = "Builds dockerfile with the name wine-prediction-app."
+sources = ["Dockerfile", "requirements.txt", "src/**/*.py"]
+run = "docker build -t wine-prediction-app ."
+
+[tasks."docker:run"]
+description = "Runs a docker container of the app with name wine-prediction-app in detach mode on bridge port 8000."
+depends = ["docker:build"]
+env.MLFLOW_TRACKING_URI = "file:/app/mlruns"
+run = """
+    docker run \
+    --detach \
+    --env MLFLOW_TRACKING_URI=$MLFLOW_TRACKING_URI \
+    --name wine-prediction-app \
+    -p 8000:8000 \
+    wine-prediction-app
+"""
+
+[tasks."docker:kill"]
+description = "Kills the docker container of the app"
+run = "docker kill wine-prediction-app ; docker rm wine-prediction-app"

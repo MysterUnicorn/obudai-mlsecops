@@ -8,8 +8,9 @@ from flask_restx import Api, Resource, fields
 from werkzeug.datastructures import FileStorage
 
 import ml_model_mlflow as ml_model_mlflow
-model = ml_model_mlflow.MLModelWithMLFlow()
 
+mlflow_uri = os.getenv("MLFLOW_TRACKING_URI") 
+model = ml_model_mlflow.MLModelWithMLFlow(mlflow_uri=mlflow_uri)
 app = Flask(__name__)
 api = Api(
     app,
