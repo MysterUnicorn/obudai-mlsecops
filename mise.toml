@@ -19,8 +19,8 @@ run = "uv run python -m autopep8 --in-place --aggressive --recursive ."
 [tasks."run:dev"]
 description = "Run the application in development mode"
 depends = ["install"]
-env.MLFLOW_TRACKING_URI = "http://localhost:8000"
-run = "mise run:mlflow & uv run gunicorn -w 1 -b 0.0.0.0:8000 app:app"
+env.MLFLOW_TRACKING_URI = "http://localhost:8080"
+run = "uv run gunicorn -w 1 -b '0.0.0.0:8000' app:app --log-level debug --reload"
 
 [tasks."run:mlflow"]
 description = "Run mlflow tracking server on localhost:8080"

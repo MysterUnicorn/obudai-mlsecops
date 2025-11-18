@@ -89,10 +89,10 @@ class Train(Resource):
             **train_results
         }
 
-@metadata_namespace.route("model_name")
+@metadata_namespace.route("/model_name")
 class ModelName(Resource):
     def get(self):
         return model.get_model_name()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=8000)

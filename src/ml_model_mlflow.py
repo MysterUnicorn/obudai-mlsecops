@@ -80,5 +80,7 @@ class MLModelWithMLFlow():
             print("INFO: No inital model was loaded. -- No staging model was found.")
 
     def get_model_name(self):
+        if self.mlflow_model is None:
+            return "not-loaded"
         return self.mlflow_model.name
 
