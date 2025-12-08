@@ -51,7 +51,7 @@ class MLModelWithMLFlow():
             model_uri = f"runs:/{run.info.run_id}/model"
 
             self.mlflow_model = mlflow.register_model(model_uri=model_uri, name=model_name)
-            self._mark_model_as_staging()
+            #self._mark_model_as_staging()
 
             return result
         

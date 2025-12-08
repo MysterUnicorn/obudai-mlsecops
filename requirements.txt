@@ -16,3 +16,4 @@ gunicorn==23.0.0
 
 # Infra
 mlflow==3.6.0
+apache-airflow

@@ -18,7 +18,7 @@ To run the dev version of the app server:
 mise run:dev
 ```
 The app is gonna be available at `localhost:8000`
-MLFlow is gonna be available at `localhost:8080`
+MLFlow is gonna be available at `localhost:8090`
 
 To run tests:
 ```

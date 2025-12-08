@@ -19,13 +19,23 @@ run = "uv run python -m autopep8 --in-place --aggressive --recursive ."
 [tasks."run:dev"]
 description = "Run the application in development mode"
 depends = ["install"]
-env.MLFLOW_TRACKING_URI = "http://localhost:8080"
-run = "uv run gunicorn -w 1 -b '0.0.0.0:8000' app:app --log-level debug --reload"
+env.MLFLOW_TRACKING_URI = "http://localhost:8090"
+env.OBJC_DISABLE_INITIALIZE_FORK_SAFETY = "YES"
+run = "uv run gunicorn -w 1 --threads 1 -b '0.0.0.0:8000' app:app --log-level debug --reload"
+
+[tasks."run:airflow"]
+description = "Run airflow on localhost:8080 with credentials `admin:admin`"
+depends = ["install"]
+env.AIRFLOW_HOME = "{{config_root}}/airflow"
+env.OBJC_DISABLE_INITIALIZE_FORK_SAFETY = "YES"
+env.AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_PASSWORDS_FILE = "{{config_root}}/airflow/simple_auth_manager_passwords.json"
+env.AIRFLOW__CORE__LOAD_EXAMPLES = "False"
+run = "uv run airflow standalone"
 
 [tasks."run:mlflow"]
-description = "Run mlflow tracking server on localhost:8080"
+description = "Run mlflow tracking server on localhost:8090"
 depends = ["install"]
-run = "mlflow server --host 127.0.0.1 --port 8080"
+run = "mlflow server --host 127.0.0.1 --port 8090"
 
 [tasks."test"]
 description = "Run all available test"
@@ -44,6 +54,7 @@ env.MLFLOW_TRACKING_URI = "file:/app/mlruns"
 run = """
     docker run \
     --detach \
+    --rm \
     --env MLFLOW_TRACKING_URI=$MLFLOW_TRACKING_URI \
     --name wine-prediction-app \
     -p 8000:8000 \
@@ -52,4 +63,4 @@ run = """
 
 [tasks."docker:kill"]
 description = "Kills the docker container of the app"
-run = "docker kill wine-prediction-app ; docker rm wine-prediction-app"
+run = "docker kill wine-prediction-app"
