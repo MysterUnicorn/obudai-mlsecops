@@ -34,8 +34,9 @@ run = "uv run airflow standalone"
 
 [tasks."run:mlflow"]
 description = "Run mlflow tracking server on localhost:8090"
+env.MLFLOW_SERVER_ALLOWED_HOSTS = "host.docker.internal,localhost,127.0.0.1,host.docker.internal:8090,localhost:8090,127.0.0.1:8090"
 depends = ["install"]
-run = "mlflow server --host 127.0.0.1 --port 8090"
+run = "mlflow server --host 0.0.0.0 --port 8090"
 
 [tasks."test"]
 description = "Run all available test"
@@ -44,18 +45,17 @@ run = "uv run pytest"
 
 [tasks."docker:build"]
 description = "Builds dockerfile with the name wine-prediction-app."
-sources = ["Dockerfile", "requirements.txt", "src/**/*.py"]
 run = "docker build -t wine-prediction-app ."
 
 [tasks."docker:run"]
 description = "Runs a docker container of the app with name wine-prediction-app in detach mode on bridge port 8000."
 depends = ["docker:build"]
-env.MLFLOW_TRACKING_URI = "file:/app/mlruns"
+env.MLFLOW_TRACKING_URI = "http://host.docker.internal:8090"
 run = """
     docker run \
-    --detach \
     --rm \
     --env MLFLOW_TRACKING_URI=$MLFLOW_TRACKING_URI \
+    --add-host=host.docker.internal:host-gateway \
     --name wine-prediction-app \
     -p 8000:8000 \
     wine-prediction-app

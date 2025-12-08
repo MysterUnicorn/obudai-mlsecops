@@ -2,7 +2,7 @@ FROM python:3.12.3-slim
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
-
+ARG CACHEBUST
 
 WORKDIR /app
 COPY src/* /app
@@ -11,5 +11,4 @@ RUN useradd -u 1001 unpriviledged_user && \
 
 USER unpriviledged_user
 ENV PYTHONPATH=/app
-ARG CACHEBUST
 CMD ["gunicorn", "-w", "1", "-b", "0.0.0.0:8000", "app:app"]

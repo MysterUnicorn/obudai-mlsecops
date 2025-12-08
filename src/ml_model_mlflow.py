@@ -35,8 +35,9 @@ class MLModelWithMLFlow():
         with mlflow.start_run(run_name=model_name) as run:
 
             result = self.ml_model.train(input_data)
-            mlflow.log_metric("train accuracy", result["in_sample_score"])
-            mlflow.log_metric("test accuracy", result["out_of_sample_score"])
+            result["model_name"] = model_name
+            mlflow.log_metric("in_sample_score", result["in_sample_score"])
+            mlflow.log_metric("out_of_sample_score", result["out_of_sample_score"])
 
             mlflow.sklearn.log_model(
                 sk_model=self.ml_model.model,
