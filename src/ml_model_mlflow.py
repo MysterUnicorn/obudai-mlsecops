@@ -17,7 +17,7 @@ class MLModelWithMLFlow():
         self.mlflow_client = None
         self._init_mlflow()
         self._load_last_staging_model()
-    
+
     def _init_mlflow(self):
         mlflow.set_tracking_uri(uri=self.mlflow_uri)
         if mlflow.get_experiment_by_name(self.mlflow_experiment_name) is None:
@@ -26,18 +26,22 @@ class MLModelWithMLFlow():
 
         self.mlflow_client = mlflow.MlflowClient()
 
-    def predict(self, input_data:pd.DataFrame) -> np.array:
+    def predict(self, input_data: pd.DataFrame) -> np.array:
         return self.ml_model.predict(input_data)
 
-    def train_and_save(self, input_data:pd.DataFrame) -> dict:
-        model_name = f"{self.mlflow_experiment_name}_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}"
+    def train_and_save(self, input_data: pd.DataFrame) -> dict:
+        model_name = f"{
+            self.mlflow_experiment_name}_{
+            datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
         with mlflow.start_run(run_name=model_name) as run:
 
             result = self.ml_model.train(input_data)
             result["model_name"] = model_name
             mlflow.log_metric("in_sample_score", result["in_sample_score"])
-            mlflow.log_metric("out_of_sample_score", result["out_of_sample_score"])
+            mlflow.log_metric(
+                "out_of_sample_score",
+                result["out_of_sample_score"])
 
             mlflow.sklearn.log_model(
                 sk_model=self.ml_model.model,
@@ -51,22 +55,24 @@ class MLModelWithMLFlow():
 
             model_uri = f"runs:/{run.info.run_id}/model"
 
-            self.mlflow_model = mlflow.register_model(model_uri=model_uri, name=model_name)
-            #self._mark_model_as_staging()
+            self.mlflow_model = mlflow.register_model(
+                model_uri=model_uri, name=model_name)
+            # self._mark_model_as_staging()
 
             return result
-        
+
     def _mark_model_as_staging(self):
         if self.mlflow_model is None:
             print("ERROR: Cannot stage model: No model mlflow model loaded to the class.")
         else:
             model_name = self.mlflow_model.name
-            self.mlflow_client.set_registered_model_tag(model_name, "environment", "staging")
+            self.mlflow_client.set_registered_model_tag(
+                model_name, "environment", "staging")
 
     def _load_last_staging_model(self):
         search_result = self.mlflow_client.search_registered_models(
-            filter_string="tag.environment='staging'", 
-            order_by=["creation_timestamp DESC"], 
+            filter_string="tag.environment='staging'",
+            order_by=["creation_timestamp DESC"],
             max_results=1)
         if len(search_result) == 1:
             latest_staging_model = search_result[0]
@@ -84,4 +90,3 @@ class MLModelWithMLFlow():
         if self.mlflow_model is None:
             return "not-loaded"
         return self.mlflow_model.name
-

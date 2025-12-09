@@ -9,7 +9,7 @@ from werkzeug.datastructures import FileStorage
 
 import ml_model_mlflow as ml_model_mlflow
 
-mlflow_uri = os.getenv("MLFLOW_TRACKING_URI") 
+mlflow_uri = os.getenv("MLFLOW_TRACKING_URI")
 model = ml_model_mlflow.MLModelWithMLFlow(mlflow_uri=mlflow_uri)
 app = Flask(__name__)
 api = Api(
@@ -19,8 +19,10 @@ api = Api(
     description='A simple API for predicting wine quality'
 )
 
-model_namespace = api.namespace('model', description='Model training and prediction')
-metadata_namespace = api.namespace("metadata", description="Metadata about the api")
+model_namespace = api.namespace(
+    'model', description='Model training and prediction')
+metadata_namespace = api.namespace(
+    "metadata", description="Metadata about the api")
 
 api.add_namespace(model_namespace)
 api.add_namespace(metadata_namespace)
@@ -89,10 +91,12 @@ class Train(Resource):
             **train_results
         }
 
+
 @metadata_namespace.route("/model_name")
 class ModelName(Resource):
     def get(self):
         return model.get_model_name()
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8000)
